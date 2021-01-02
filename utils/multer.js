@@ -1,5 +1,6 @@
 const multer = require("multer");
 const path = require("path");
+const AppError = require("./appError");
 
 const multerStorage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -14,10 +15,16 @@ const multerStorage = multer.diskStorage({
 });
 
 const multerFilter = (req, file, cb) => {
-  if (file.mimetype.startsWith("image")) {
+  if (
+    file.mimetype == "image/png" ||
+    file.mimetype == "image/jpg" ||
+    file.mimetype == "image/jpeg" ||
+    file.mimetype == "image/gif"
+  ) {
     cb(null, true);
   } else {
-    cb("Not an image! Please upload only images.", false);
+    cb(null, false);
+    return new AppError("Allowed only .png, .jpg, .jpeg and .gif", 400);
   }
 };
 

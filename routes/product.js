@@ -15,6 +15,12 @@ router
   .get(productController.getAllCategory);
 
 router
+  .route("/category/:slug")
+  .get(productController.getCategory)
+  .put(imageUpload.single("image"), productController.updateCategory)
+  .delete(productController.deleteCategory);
+
+router
   .route("/")
   .post(up, productController.addProduct)
   .get(productController.getAllProducts);

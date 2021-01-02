@@ -9,4 +9,10 @@ router
   .post(imageUpload.single("image"), testimonialController.addTestimonial)
   .get(testimonialController.getAllTestimonial);
 
+router
+  .route("/:slug")
+  .get(testimonialController.getTestimonial)
+  .put(imageUpload.single("image"), testimonialController.updateTestimonial)
+  .delete(testimonialController.deleteTestimonial);
+
 module.exports = router;

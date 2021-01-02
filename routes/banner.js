@@ -9,4 +9,10 @@ router
   .post(imageUpload.single("image"), bannerController.addBanner)
   .get(bannerController.getAllBanner);
 
+router
+  .route("/:slug")
+  .get(bannerController.getBanner)
+  .put(imageUpload.single("image"), bannerController.updateBanner)
+  .delete(bannerController.deleteBanner);
+
 module.exports = router;

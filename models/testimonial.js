@@ -6,9 +6,11 @@ const testimonialSchema = new mongoose.Schema(
     name: {
       type: String,
       required: true,
-      unique: true,
       trim: true,
       sparse: true
+    },
+    slug: {
+      type: String
     },
     email: {
       type: String,
