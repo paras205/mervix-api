@@ -38,7 +38,8 @@ const productSchema = new mongoose.Schema(
     productImages: [{ type: String }],
     category: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Category"
+      ref: "Category",
+      required: true
     },
     weight: {
       type: Number
@@ -63,7 +64,13 @@ const productSchema = new mongoose.Schema(
     manufacturer: {
       type: String
     },
+    features: {
+      type: String
+    },
     additional_information: {
+      type: String
+    },
+    shortDescription: {
       type: String
     },
     attributes: {

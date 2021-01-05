@@ -150,3 +150,92 @@ exports.getAllProducts = async (req, res) => {
     });
   }
 };
+
+exports.getProduct = async (req, res) => {
+  try {
+    const product = await Product.findOne({ slug: req.params.slug }).populate(
+      "category"
+    );
+    res.status(200).json({
+      message: "success",
+      data: product
+    });
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+exports.updateProduct = async (req, res, next) => {
+  try {
+    let productImages = [];
+    if (req.files && req.files.productImages) {
+      req.files.productImages.forEach((element) => {
+        productImages.push(
+          `${
+            req.connection && req.connection.encrypted ? "https" : "http"
+          }://${req.get("host")}/uploads/images/${element.filename}`
+        );
+      });
+    }
+    const image = {
+      url: `${
+        req.connection && req.connection.encrypted ? "https" : "http"
+      }://${req.get("host")}/uploads/images/${req.files?.image[0]?.filename}`,
+      alt: req.body?.image?.alt,
+      caption: req.body?.image?.caption
+    };
+    const product = await Product.findOneAndUpdate(
+      { slug: req.params.slug },
+      { ...req.body, image, productImages },
+      {
+        new: true,
+        runValidators: true
+      }
+    );
+
+    res.status(201).json({
+      message: "success",
+      data: product
+    });
+  } catch (err) {
+    console.log(err);
+    next(err);
+  }
+};
+
+exports.deleteProduct = async (req, res) => {
+  try {
+    await Product.findOneAndDelete({ slug: req.params.slug });
+    res.status(204).json({
+      message: "success"
+    });
+  } catch (err) {
+    res.status(404).json({
+      message: "Fail",
+      err
+    });
+  }
+};
+
+exports.getProductByCategory = async (req, res, next) => {
+  try {
+    console.log(req.query);
+    const product = await Product.find().populate("category");
+    let filteredProducts;
+    if (req.query.query) {
+      filteredProducts = product.filter((item) => {
+        return (
+          item &&
+          item.category &&
+          (item?.category?._id).toString() === req.query.query.toString()
+        );
+      });
+    }
+    res.status(200).json({
+      message: "success",
+      data: req.query.query ? filteredProducts : product
+    });
+  } catch (err) {
+    console.log(err);
+  }
+};

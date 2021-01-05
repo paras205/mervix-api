@@ -25,4 +25,12 @@ router
   .post(up, productController.addProduct)
   .get(productController.getAllProducts);
 
+router
+  .route("/:slug")
+  .get(productController.getProduct)
+  .put(up, productController.updateProduct)
+  .delete(productController.deleteProduct);
+
+router.get("/getProduct/byCategory", productController.getProductByCategory);
+
 module.exports = router;
